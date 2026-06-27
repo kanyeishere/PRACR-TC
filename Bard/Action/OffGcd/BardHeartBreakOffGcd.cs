@@ -64,7 +64,7 @@ public class BardHeartBreakOffGcd : IDecisionResolver
 
         // 不和切贤者歌前最后一个完美音调冲突
         var wandererSongDuration = BardSettings.Instance.WandererSongDuration * 1000f;
-        if (BardHelper.CurrentSong == Song.WanderersMinuet &&
+        if (BardHelper.CurrentSong == Song.Wanderer &&
             BardHelper.SongTimerMs < 45600f - wandererSongDuration &&
             MagesBallad.GetActionCooldown() * 1000f <= 1200f &&
             PromeSettings.Instance.GetQt(BRDQt.Song))
@@ -97,7 +97,7 @@ public class BardHeartBreakOffGcd : IDecisionResolver
             return new CheckResult(false, "团辅即将就绪，攒碎心箭");
 
         // 旅神期间，不和三层诗心的完美音调冲突
-        if (repertoire == 3 && BardHelper.CurrentSong == Song.WanderersMinuet)
+        if (repertoire == 3 && BardHelper.CurrentSong == Song.Wanderer)
             return new CheckResult(false, "让位三层诗心完美音调");
 
         if (repertoire == 2 &&
@@ -128,4 +128,5 @@ public class BardHeartBreakOffGcd : IDecisionResolver
         return new PAction(BardHelper.Adjust(HeartBreak), ActionType.OffGcd, ActionTargetType.Target);
     }
 }
+
 

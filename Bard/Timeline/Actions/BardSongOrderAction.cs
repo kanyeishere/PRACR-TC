@@ -47,9 +47,9 @@ public class BardSongOrderAction
 
     private static Song IntToSong(int idx) => idx switch
     {
-        1 => Song.WanderersMinuet,
-        2 => Song.MagesBallad,
-        3 => Song.ArmysPaeon,
+        1 => Song.Wanderer,
+        2 => Song.Mage,
+        3 => Song.Army,
         _ => Song.None
     };
 
@@ -68,9 +68,9 @@ public class BardSongOrderAction
         settings.ThirdSong = IntToSong(_thirdSong);
 
         // 非标准歌轴时禁掉对齐旅神和强对齐
-        if (settings.FirstSong != Song.WanderersMinuet ||
-            settings.SecondSong != Song.MagesBallad ||
-            settings.ThirdSong != Song.ArmysPaeon)
+        if (settings.FirstSong != Song.Wanderer ||
+            settings.SecondSong != Song.Mage ||
+            settings.ThirdSong != Song.Army)
         {
             PromeSettings.Instance.SetQt(BRDQt.BurstWithWanderer, false);
         }
@@ -100,3 +100,4 @@ public class BardSongOrderAction
         });
     }
 }
+

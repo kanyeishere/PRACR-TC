@@ -18,7 +18,7 @@ public class BardBattleVoiceOffGcd : IDecisionResolver
             return new CheckResult(false, "QT爆发关闭");
 
         if (PromeSettings.Instance.GetQt(BRDQt.BurstWithWanderer) &&
-            BardHelper.CurrentSong != Song.WanderersMinuet)
+            BardHelper.CurrentSong != Song.Wanderer)
             return new CheckResult(false, "等待旅神对齐爆发");
 
         if (!BardHelper.IsUnlocked(BattleVoice))
@@ -73,4 +73,5 @@ public class BardBattleVoiceOffGcd : IDecisionResolver
         return actionId == 0 ? 0f : actionId.GetActionCooldown() * 1000f;
     }
 }
+
 

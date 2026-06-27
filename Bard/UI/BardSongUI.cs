@@ -43,7 +43,7 @@ internal static class BardSongUI
         var changed = false;
         if (!ImGui.BeginCombo(label, SongDisplayName(song))) return false;
 
-        foreach (var candidate in new[] { Song.WanderersMinuet, Song.MagesBallad, Song.ArmysPaeon })
+        foreach (var candidate in new[] { Song.Wanderer, Song.Mage, Song.Army })
         {
             var selected = song == candidate;
             if (ImGui.Selectable(SongDisplayName(candidate), selected))
@@ -63,11 +63,12 @@ internal static class BardSongUI
     {
         return song switch
         {
-            Song.WanderersMinuet => "旅神",
-            Song.MagesBallad => "贤者",
-            Song.ArmysPaeon => "军神",
+            Song.Wanderer => "旅神",
+            Song.Mage => "贤者",
+            Song.Army => "军神",
             _ => "无"
         };
     }
 }
+
 

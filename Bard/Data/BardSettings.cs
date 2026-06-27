@@ -9,9 +9,9 @@ public class BardSettings
     public float MageSongDuration { get; set; } = 39.2f;
     public float ArmySongDuration { get; set; } = 39f;
 
-    public Song FirstSong { get; set; } = Song.WanderersMinuet;
-    public Song SecondSong { get; set; } = Song.MagesBallad;
-    public Song ThirdSong { get; set; } = Song.ArmysPaeon;
+    public Song FirstSong { get; set; } = Song.Wanderer;
+    public Song SecondSong { get; set; } = Song.Mage;
+    public Song ThirdSong { get; set; } = Song.Army;
 
     public int WandererBeforeGcdTime { get; set; } = 750;
 
@@ -36,9 +36,10 @@ public class BardSettings
     
     public void ResetSongOrderNormal()
     {
-        FirstSong = Song.WanderersMinuet;
-        SecondSong = Song.MagesBallad;
-        ThirdSong = Song.ArmysPaeon;
+        FirstSong = Song.Wanderer;
+        SecondSong = Song.Mage;
+        ThirdSong = Song.Army;
     }
 }
+
 

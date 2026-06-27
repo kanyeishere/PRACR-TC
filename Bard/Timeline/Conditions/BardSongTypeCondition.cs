@@ -46,9 +46,9 @@ public class BardSongTypeCondition
         return _songIndex switch
         {
             0 => currentSong == Song.None,
-            1 => currentSong == Song.WanderersMinuet,
-            2 => currentSong == Song.MagesBallad,
-            3 => currentSong == Song.ArmysPaeon,
+            1 => currentSong == Song.Wanderer,
+            2 => currentSong == Song.Mage,
+            3 => currentSong == Song.Army,
             _ => false
         };
     }
@@ -75,3 +75,4 @@ public class BardSongTypeCondition
         });
     }
 }
+

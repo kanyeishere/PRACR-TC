@@ -21,7 +21,7 @@ public class BardPitchPerfectOffGcd : IDecisionResolver
             return new CheckResult(false, "GCD窗口不足");
         if (!BardHelper.IsUnlocked(PitchPerfect))
             return new CheckResult(false, "完美音调未解锁");
-        if (BardHelper.CurrentSong != Song.WanderersMinuet)
+        if (BardHelper.CurrentSong != Song.Wanderer)
             return new CheckResult(false, "当前不是旅神歌");
         if (EmpyrealArrow.GetActionCooldown() * 1000f < 650f &&
             PromeSettings.Instance.GetQt(BRDQt.EmpyrealArrow) &&
@@ -60,4 +60,5 @@ public class BardPitchPerfectOffGcd : IDecisionResolver
         return new PAction(PitchPerfect, ActionType.OffGcd, ActionTargetType.Target);
     }
 }
+
 

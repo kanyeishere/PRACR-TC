@@ -18,18 +18,18 @@ public static class BardSongHelper
 
     public static bool IsSongOrderNormal()
     {
-        return BardSettings.Instance.FirstSong == Song.WanderersMinuet &&
-               BardSettings.Instance.SecondSong == Song.MagesBallad &&
-               BardSettings.Instance.ThirdSong == Song.ArmysPaeon;
+        return BardSettings.Instance.FirstSong == Song.Wanderer &&
+               BardSettings.Instance.SecondSong == Song.Mage &&
+               BardSettings.Instance.ThirdSong == Song.Army;
     }
 
     public static uint GetSpellBySong(Song song)
     {
         return song switch
         {
-            Song.WanderersMinuet => WanderersMinuet,
-            Song.MagesBallad => MagesBallad,
-            Song.ArmysPaeon => ArmysPaeon,
+            Song.Wanderer => WanderersMinuet,
+            Song.Mage => MagesBallad,
+            Song.Army => ArmysPaeon,
             _ => 0
         };
     }
@@ -38,9 +38,9 @@ public static class BardSongHelper
     {
         return actionId switch
         {
-            WanderersMinuet => Song.WanderersMinuet,
-            MagesBallad => Song.MagesBallad,
-            ArmysPaeon => Song.ArmysPaeon,
+            WanderersMinuet => Song.Wanderer,
+            MagesBallad => Song.Mage,
+            ArmysPaeon => Song.Army,
             _ => Song.None
         };
     }
@@ -49,9 +49,9 @@ public static class BardSongHelper
     {
         return song switch
         {
-            Song.WanderersMinuet => BardSettings.Instance.WandererSongDuration,
-            Song.MagesBallad => BardSettings.Instance.MageSongDuration,
-            Song.ArmysPaeon => BardSettings.Instance.ArmySongDuration,
+            Song.Wanderer => BardSettings.Instance.WandererSongDuration,
+            Song.Mage => BardSettings.Instance.MageSongDuration,
+            Song.Army => BardSettings.Instance.ArmySongDuration,
             _ => 0
         };
     }
@@ -181,9 +181,9 @@ public static class BardSongHelper
     {
         return song switch
         {
-            Song.WanderersMinuet => "旅神",
-            Song.MagesBallad => "贤者",
-            Song.ArmysPaeon => "军神",
+            Song.Wanderer => "旅神",
+            Song.Mage => "贤者",
+            Song.Army => "军神",
             _ => "无"
         };
     }
@@ -253,36 +253,36 @@ public static class BardSongHelper
             return false;
         }
 
-        if (!IsSongReady(Song.MagesBallad) &&
-            !IsSongReady(Song.ArmysPaeon) &&
-            !IsSongReady(Song.WanderersMinuet))
+        if (!IsSongReady(Song.Mage) &&
+            !IsSongReady(Song.Army) &&
+            !IsSongReady(Song.Wanderer))
         {
             reason = "三首歌均未就绪";
             return false;
         }
 
-        if (CurrentSong == Song.WanderersMinuet &&
+        if (CurrentSong == Song.Wanderer &&
             SongTimerMs < 45000f - settings.WandererSongDuration * 1000f &&
-            IsSongReady(Song.MagesBallad))
+            IsSongReady(Song.Mage))
         {
             songActionId = BRDSkill.MagesBallad;
             reason = "旅神到时长, 切贤者";
             return true;
         }
 
-        if (CurrentSong == Song.MagesBallad &&
+        if (CurrentSong == Song.Mage &&
             SongTimerMs < 45000f - settings.MageSongDuration * 1000f &&
-            IsSongReady(Song.ArmysPaeon))
+            IsSongReady(Song.Army))
         {
             songActionId = BRDSkill.ArmysPaeon;
             reason = "贤者到时长, 切军神";
             return true;
         }
 
-        if (CurrentSong == Song.ArmysPaeon &&
+        if (CurrentSong == Song.Army &&
             (allowNoTarget || gcdRemainMs <= settings.WandererBeforeGcdTime) &&
             SongTimerMs < 45000f - settings.ArmySongDuration * 1000f &&
-            IsSongReady(Song.WanderersMinuet) &&
+            IsSongReady(Song.Wanderer) &&
             !PromeSettings.Instance.GetQt(BRDQt.BurstWithWanderer))
         {
             songActionId = BRDSkill.TheWanderersMinuet;
@@ -291,7 +291,7 @@ public static class BardSongHelper
         }
 
         if (CurrentSong == Song.None &&
-            (IsSongReady(Song.WanderersMinuet) || IsSongReady(Song.MagesBallad) || IsSongReady(Song.ArmysPaeon)))
+            (IsSongReady(Song.Wanderer) || IsSongReady(Song.Mage) || IsSongReady(Song.Army)))
         {
             songActionId = GetNextSongAction();
             if (songActionId != 0)
@@ -303,7 +303,7 @@ public static class BardSongHelper
 
         if (PromeSettings.Instance.GetQt(BRDQt.Burst) &&
             PromeSettings.Instance.GetQt(BRDQt.BurstWithWanderer) &&
-            IsSongReady(Song.WanderersMinuet) &&
+            IsSongReady(Song.Wanderer) &&
             (allowNoTarget || gcdRemainMs <= settings.WandererBeforeGcdTime) &&
             IsWandererBurstWindowReady())
         {
@@ -321,13 +321,13 @@ public static class BardSongHelper
         var settings = BardSettings.Instance;
         return CurrentSong switch
         {
-            Song.WanderersMinuet => BuildSongWaitMessage(Song.WanderersMinuet, Song.MagesBallad),
-            Song.MagesBallad => BuildSongWaitMessage(Song.MagesBallad, Song.ArmysPaeon),
-            Song.ArmysPaeon when gcdRemainMs > settings.WandererBeforeGcdTime =>
+            Song.Wanderer => BuildSongWaitMessage(Song.Wanderer, Song.Mage),
+            Song.Mage => BuildSongWaitMessage(Song.Mage, Song.Army),
+            Song.Army when gcdRemainMs > settings.WandererBeforeGcdTime =>
                 $"等旅神前置窗口:{gcdRemainMs:F0}>{settings.WandererBeforeGcdTime}ms",
-            Song.ArmysPaeon when PromeSettings.Instance.GetQt(BRDQt.BurstWithWanderer) =>
+            Song.Army when PromeSettings.Instance.GetQt(BRDQt.BurstWithWanderer) =>
                 $"军神中, 等爆发旅神 战歌:{BRDSkill.BattleVoice.GetActionCooldown() * 1000f:F0}ms",
-            Song.ArmysPaeon => BuildSongWaitMessage(Song.ArmysPaeon, Song.WanderersMinuet),
+            Song.Army => BuildSongWaitMessage(Song.Army, Song.Wanderer),
             Song.None => "无歌曲但没有可用歌曲",
             _ => $"未知歌曲状态:{CurrentSong}"
         };
@@ -355,4 +355,5 @@ public static class BardSongHelper
                (ragingMs <= 2200f && battleVoiceMs <= 3750f);
     }
 }
+
 

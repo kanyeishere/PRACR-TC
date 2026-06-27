@@ -18,7 +18,7 @@ public class BardPitchPerfectMaxOffGcd : IDecisionResolver
             return new CheckResult(false, "GCD窗口不足");
         if (!BardHelper.IsUnlocked(PitchPerfect))
             return new CheckResult(false, "完美音调未解锁");
-        if (BardHelper.CurrentSong != Song.WanderersMinuet)
+        if (BardHelper.CurrentSong != Song.Wanderer)
             return new CheckResult(false, "当前不是旅神歌");
         if (TargetHelper.EnemyInRangeTarget(Core.Core.Target, 5) < BardBattleData.Instance.PitchPerfectMinEnemyCount)
             return new CheckResult(false, "目标数量不足");
@@ -33,4 +33,5 @@ public class BardPitchPerfectMaxOffGcd : IDecisionResolver
         return new PAction(PitchPerfect, ActionType.OffGcd, ActionTargetType.Target);
     }
 }
+
 
