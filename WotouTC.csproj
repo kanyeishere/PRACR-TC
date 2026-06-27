@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+        <RootNamespace>WotouTC</RootNamespace>
+
+        <!-- 指定输出目录（台服 Dalamud 路径） -->
+        <OutputPath Condition="'$(OutputPath)' == ''">C:\Users\$(USERNAME)\AppData\Roaming\XIVLauncher\pluginConfigs\PromeRotation\ACR\WotouTC</OutputPath>
+
+        <!-- 不再自动附加 net9.0-windows -->
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="**\bin\**;**\obj\**" />
+        <EmbeddedResource Remove="**\bin\**;**\obj\**" />
+        <None Remove="**\bin\**;**\obj\**" />
+    </ItemGroup>
+
+    <!-- API12 编译期引用通过 NuGet SDK 包提供 -->
+    <ItemGroup>
+        <PackageReference Include="PromeRotation.SDK.API12" Version="0.1.0-preview.2">
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>

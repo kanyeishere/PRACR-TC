@@ -1,0 +1,163 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, for example 1.5.2.2"
+        required: true
+        default: "1.0.0.0"
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  ACR_AUTHOR: Wotou-TC
+  ACR_DESCRIPTION: 一个简单的只支持高难的ACR（台服API12版）
+  ACR_JOB: BRD
+  ACR_CONTENT_SCOPE: Unspecified
+  ACR_API_VERSION: "12"
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $version = "${{ github.event.inputs.version }}"
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            $version = "${{ github.ref_name }}"
+            if ($version.StartsWith("v")) {
+              $version = $version.Substring(1)
+            }
+          }
+
+          $parsedVersion = $null
+          if (-not [System.Version]::TryParse($version, [ref]$parsedVersion)) {
+            throw "Version '$version' is not a valid System.Version value. Use a tag like v1.5.2.2."
+          }
+
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore NuGet packages
+        shell: pwsh
+        run: |
+          dotnet restore WotouTC.csproj
+
+      - name: Sync RotationMetadata version
+        shell: pwsh
+        run: |
+          $path = "Bard/BardRotation.cs"
+          $version = "${{ steps.version.outputs.version }}"
+          $text = Get-Content -Path $path -Raw
+          $pattern = '(\[RotationMetadata\(\(uint\)Job\.BRD,\s*"[^"]+",\s*"[^"]+",\s*")[^"]+("\)\])'
+          $regex = [regex]::new($pattern)
+          $updated = $regex.Replace(
+            $text,
+            [System.Text.RegularExpressions.MatchEvaluator]{
+              param($match)
+              $match.Groups[1].Value + $version + $match.Groups[2].Value
+            },
+            1)
+
+          if ($updated -eq $text) {
+            throw "Could not find RotationMetadata version in $path."
+          }
+
+          Set-Content -Path $path -Value $updated -Encoding UTF8
+          Select-String -Path $path -Pattern "RotationMetadata"
+
+      - name: Build
+        shell: pwsh
+        run: |
+          dotnet build WotouTC.csproj `
+            --configuration Release `
+            -p:OutputPath="${{ runner.temp }}\publish\" `
+            -p:AppendTargetFrameworkToOutputPath=false
+
+      - name: Package zip
+        shell: pwsh
+        run: |
+          $publish = "${{ runner.temp }}\publish"
+          $dist = "${{ runner.temp }}\dist"
+          New-Item -ItemType Directory -Force -Path $dist | Out-Null
+
+          Compress-Archive `
+            -Path "$publish\WotouTC.dll", "$publish\WotouTC.deps.json" `
+            -DestinationPath "$dist\latest.zip" `
+            -Force
+
+      - name: Generate repo json
+        shell: pwsh
+        run: |
+          $dist = "${{ runner.temp }}\dist"
+          $zipUrl = "https://raw.githubusercontent.com/${{ github.repository }}/release/latest.zip"
+          $zipPath = "$dist\latest.zip"
+          $sha256 = (Get-FileHash -Algorithm SHA256 -Path $zipPath).Hash.ToLowerInvariant()
+
+          $manifest = [ordered]@{
+            author = "${{ env.ACR_AUTHOR }}"
+            version = "${{ steps.version.outputs.version }}"
+            description = "${{ env.ACR_DESCRIPTION }}"
+            supportedJobs = @(
+              [ordered]@{
+                job = "${{ env.ACR_JOB }}"
+                contentScope = "${{ env.ACR_CONTENT_SCOPE }}"
+              }
+            )
+            apiVersion = [int]"${{ env.ACR_API_VERSION }}"
+            referencePromeVersion = "0.1.0-preview.2"
+            downloadUrl = $zipUrl
+            sha256 = $sha256
+          }
+
+          $json = $manifest | ConvertTo-Json -Depth 8
+          Set-Content -Path "$dist\repo.json" -Value $json -Encoding UTF8
+
+          $json
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-files
+          path: |
+            ${{ runner.temp }}\dist\latest.zip
+            ${{ runner.temp }}\dist\repo.json
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        continue-on-error: true
+        with:
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
+          tag_name: ${{ steps.version.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.version.outputs.tag }}
+          make_latest: true
+          files: |
+            ${{ runner.temp }}\dist\latest.zip
+            ${{ runner.temp }}\dist\repo.json
+
+      - name: Publish stable download branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.RELEASE_TOKEN || github.token }}
+          publish_branch: release
+          publish_dir: ${{ runner.temp }}\dist
+          force_orphan: true
