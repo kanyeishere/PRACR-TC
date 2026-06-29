@@ -47,10 +47,6 @@ public class BardPitchPerfectOffGcd : IDecisionResolver
             BardHelper.HasSelfStatus(BardBattleData.Instance.First120SBuffId) &&
             repertoire >= 1)
             return new CheckResult(true, "团辅最后一个能力技");
-        if (MagesBallad.GetActionCooldown() * 1000f <= 1200f &&
-            repertoire >= 1 &&
-            PromeSettings.Instance.GetQt(BRDQt.Song))
-            return new CheckResult(true, "切贤者前完美音调");
 
         return new CheckResult(false, $"完美音调条件不满足 诗心:{repertoire}");
     }
