@@ -8,6 +8,7 @@ using PromeRotation.Managers;
 using PromeRotation.Resolvers;
 using PromeRotation.Rotation;
 using PromeRotation.Timeline.Core;
+using Wotou.Bard.Action;
 using WotouTC.Bard.Action;
 using WotouTC.Bard.Data;
 using WotouTC.Bard.Opener;
@@ -42,6 +43,7 @@ public class BardRotation : IRotation
         _offGcdResolvers.Add(new BardSongAbility());
         _offGcdResolvers.Add(new BardHeartBreakOffGcd());
 
+        _gcdResolvers.Add(new BurstingAfterDeathSequence());
         _gcdResolvers.Add(new BardBlastArrowMaxGcd());
         _gcdResolvers.Add(new BardIronJawsGcd());
         _gcdResolvers.Add(new BardApexMaxGcd());
