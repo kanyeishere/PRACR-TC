@@ -19,7 +19,7 @@ public class BardSoulVoiceCondition
             "operator",
             "条件运算符",
             "比较灵魂之声的方式",
-            "int",
+            "enum",
             new[] {
                 ("0", "<"),
                 ("1", ">"),

@@ -15,7 +15,7 @@ public class BardDotBlacklistAction
     public NodeParamInfo[] Params => new[]
     {
         new NodeParamInfo("action", "操作", "add=添加, remove=移除, clear=清空",
-            "string", new[] {
+            "enum", new[] {
                 ("add", "添加"),
                 ("remove", "移除"),
                 ("clear", "清空"),

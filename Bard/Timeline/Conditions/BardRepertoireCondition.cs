@@ -19,7 +19,7 @@ public class BardRepertoireCondition
             "operator",
             "条件运算符",
             "比较诗心层数的方式",
-            "int",
+            "enum",
             new[] {
                 ("0", "<"),
                 ("1", ">"),

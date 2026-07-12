@@ -19,7 +19,7 @@ public class BardSongTypeCondition
             "song_index",
             "歌曲类型",
             "0=无, 1=旅神, 2=贤者, 3=军神",
-            "int",
+            "enum",
             new[] {
                 ("0", "无歌曲"),
                 ("1", "旅神歌"),

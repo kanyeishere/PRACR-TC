@@ -26,7 +26,6 @@ public sealed class BardJobNodeProvider : IJobNodeProvider
         BardSongOrderAction.Register(context);
         BardPotionModeAction.Register(context);
         BardToggleDailyModeAction.Register(context);
-        BardTriggerActionOpener.Register(context);
     }
 
     public IReadOnlyList<(string DisplayName, string Description, Func<ICondition> Create)> GetConditionDescriptors()
@@ -61,8 +60,6 @@ public sealed class BardJobNodeProvider : IJobNodeProvider
                 (Func<IAction>)(() => new BardSongOrderAction())),
             ("Bard/爆发药模式", "切换起手吃爆发药或两分钟爆发吃",
                 (Func<IAction>)(() => new BardPotionModeAction())),
-            ("Bard/起手设置", "选择Bard的起手类型",
-                (Func<IAction>)(() => new BardTriggerActionOpener())),
             ("Bard/切换模式（日随高难）", "切换日随模式或高难模式",
                 (Func<IAction>)(() => new BardToggleDailyModeAction())),
         };

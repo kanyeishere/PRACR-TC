@@ -19,11 +19,11 @@ public class BardSongOrderAction
     public NodeParamInfo[] Params => new[]
     {
         new NodeParamInfo("first", "第一首歌", "1=旅神, 2=贤者, 3=军神",
-            "int", new[] { ("1", "旅神"), ("2", "贤者"), ("3", "军神") }),
+            "enum", new[] { ("1", "旅神"), ("2", "贤者"), ("3", "军神") }),
         new NodeParamInfo("second", "第二首歌", "1=旅神, 2=贤者, 3=军神",
-            "int", new[] { ("1", "旅神"), ("2", "贤者"), ("3", "军神") }),
+            "enum", new[] { ("1", "旅神"), ("2", "贤者"), ("3", "军神") }),
         new NodeParamInfo("third", "第三首歌", "1=旅神, 2=贤者, 3=军神",
-            "int", new[] { ("1", "旅神"), ("2", "贤者"), ("3", "军神") }),
+            "enum", new[] { ("1", "旅神"), ("2", "贤者"), ("3", "军神") }),
     };
 
     public string GetParam(string fieldName) => fieldName switch

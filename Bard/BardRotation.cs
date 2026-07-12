@@ -1,12 +1,14 @@
 using ImGuiNET;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using ECommons.ExcelServices;
+using ECommons.Logging;
 using PromeRotation;
 using PromeRotation.Data;
 using PromeRotation.Helpers;
 using PromeRotation.Managers;
 using PromeRotation.Resolvers;
 using PromeRotation.Rotation;
+using PromeRotation.Timeline;
 using PromeRotation.Timeline.Core;
 using Wotou.Bard.Action;
 using WotouTC.Bard.Action;
@@ -146,7 +148,61 @@ public class BardRotation : IRotation
 
     public IOpener? GetOpener()
     {
-        return BardSettings.Instance.Opener switch
+        // 起手来源优先级：时间轴（PTL / 旧 Timeline）的 Meta.Opener > 设置页“起手”选择。
+        // 时间轴指定的起手若存在，则覆盖设置页；这样本体“当前使用起手”显示与实际执行保持同源。
+        if (TryCreateTimelineOpener(out var timelineOpener))
+            return timelineOpener;
+
+        return CreateOpenerBySettings(BardSettings.Instance.Opener);
+    }
+
+    private static bool TryCreateTimelineOpener(out IOpener? opener)
+    {
+        var openerName = PromeRotation.PureTimeline.PtlManager.CurrentOpener;
+        var openerSource = "PureTimeline";
+
+        if (string.IsNullOrWhiteSpace(openerName))
+        {
+            openerName = TimelineManager.CurrentMeta?.Opener;
+            openerSource = "Timeline";
+        }
+
+        if (string.IsNullOrWhiteSpace(openerName))
+        {
+            opener = null;
+            return false;
+        }
+
+        if (!Openers.TryGetValue(openerName, out var openerType))
+        {
+            PluginLog.Warning($"[ACR] {openerSource} 指定起手不存在：{openerName}");
+            opener = null;
+            return false;
+        }
+
+        try
+        {
+            if (Activator.CreateInstance(openerType) is IOpener created)
+            {
+                PluginLog.Information($"[ACR] 从{openerSource}加载起手：{openerName}");
+                opener = created;
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Error($"[ACR] 创建起手实例失败: {ex.Message}");
+        }
+
+        opener = null;
+        return false;
+    }
+
+    // 设置页的起手 index 与 Openers 字典顺序不一致（5=自定义起手在字典中无对应，FR 为 6），
+    // 因此这里保留显式映射，而不是按字典下标取。
+    private static IOpener CreateOpenerBySettings(int openerIndex)
+    {
+        return openerIndex switch
         {
             0 => new Bard3GOpener100(),
             1 => new Bard2GOpener100(),

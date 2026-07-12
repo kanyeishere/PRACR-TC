@@ -19,7 +19,7 @@ public class BardSongTimerCondition
             "operator",
             "条件运算符",
             "比较歌曲剩余时间的方式",
-            "int",
+            "enum",
             new[] {
                 ("0", "<"),
                 ("1", ">"),
