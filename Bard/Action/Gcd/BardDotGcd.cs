@@ -24,7 +24,7 @@ public class BardDotGcd : IDecisionResolver
         var target = Core.Core.Target;
         if (target == null)
             return new CheckResult(false, "当前无目标");
-        if (BardBattleData.Instance.DotBlackList.Contains(target.DataId))
+        if (BardBattleData.Instance.DotBlackList.Contains(target.BaseId))
             return new CheckResult(false, "目标在战斗DOT黑名单");
         if (!BardHelper.IsBoss(target) &&
             !BardSettings.Instance.ApplyDotOnTrashMobs &&

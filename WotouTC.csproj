@@ -21,9 +21,9 @@
         <None Remove="**\bin\**;**\obj\**" />
     </ItemGroup>
 
-    <!-- API12 编译期引用通过 NuGet SDK 包提供 -->
+    <!-- 繁中服 API13 编译期引用通过 NuGet SDK 包提供 -->
     <ItemGroup>
-        <PackageReference Include="PromeRotation.SDK.API12" Version="0.1.0-preview.2">
+        <PackageReference Include="PromeRotation.SDK.TC" Version="0.1.0-preview.1">
             <Private>false</Private>
             <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>

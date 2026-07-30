@@ -16,10 +16,10 @@ permissions:
 
 env:
   ACR_AUTHOR: Wotou-TC
-  ACR_DESCRIPTION: 一个简单的只支持高难的ACR（台服API12版）
+  ACR_DESCRIPTION: 一个简单的只支持高难的ACR（台服API13版）
   ACR_JOB: BRD
   ACR_CONTENT_SCOPE: Unspecified
-  ACR_API_VERSION: "12"
+  ACR_API_VERSION: "13"
 
 jobs:
   release:
@@ -123,7 +123,7 @@ jobs:
               }
             )
             apiVersion = [int]"${{ env.ACR_API_VERSION }}"
-            referencePromeVersion = "0.1.0-preview.2"
+            referencePromeVersion = "1.3.1.1"
             downloadUrl = $zipUrl
             sourceRepositoryUrl = "https://github.com/kanyeishere/PRACR-TC"
             sha256 = $sha256

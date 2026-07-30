@@ -77,7 +77,7 @@ public class BurstingAfterDeathSequence : IDecisionResolver
         var target = Core.Core.Target;
         
         // 1) 目标在DOT黑名单 → 打基础GCD
-        if (BardBattleData.Instance.DotBlackList.Contains(target.DataId))
+        if (BardBattleData.Instance.DotBlackList.Contains(target.BaseId))
             return BardHelper.GetBaseGcd();
 
         // 2) 目标缺少风DOT → 补风毒

@@ -1,6 +1,6 @@
 # 使用 GitHub Actions 自动构建发布 PromeRotation ACR
 
-> 本文是一份通用教程，基于 Wotou-TC（一个 BRD ACR，台服 API12 版）的实际经验总结。如果你在开发自己的 PromeRotation ACR，可以照着这个流程搭建自动发布流水线。
+> 本文是一份通用教程，基于 Wotou-TC（一个 BRD ACR，台服 API13 版）的实际经验总结。如果你在开发自己的 PromeRotation ACR，可以照着这个流程搭建自动发布流水线。
 
 ---
 

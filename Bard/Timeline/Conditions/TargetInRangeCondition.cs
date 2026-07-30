@@ -56,7 +56,7 @@ public class TargetInRangeCondition
         for (var i = 0; i < Svc.Objects.Length; i++)
         {
             var obj = Svc.Objects[i];
-            if (obj == null || obj.DataId != _dataId) continue;
+            if (obj == null || obj.BaseId != _dataId) continue;
             if (Vector3.Distance(center, obj.Position) <= _radius)
                 return true;
         }

@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using ECommons.ExcelServices;
 using ECommons.Logging;
@@ -242,5 +242,4 @@ public class BardRotation : IRotation
     {
     }
 }
-
 

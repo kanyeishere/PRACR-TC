@@ -98,7 +98,7 @@ public class BardHelper
         var isBossRank = false;
         try
         {
-            if (Svc.Data.GetExcelSheet<BNpcBase>().TryGetRow(target.DataId, out var dataRow))
+            if (Svc.Data.GetExcelSheet<BNpcBase>().TryGetRow(target.BaseId, out var dataRow))
             {
                 isBossRank = dataRow.Rank is 2 or 6;
             }
