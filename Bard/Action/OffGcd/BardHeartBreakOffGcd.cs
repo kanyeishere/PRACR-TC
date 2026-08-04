@@ -20,8 +20,6 @@ public class BardHeartBreakOffGcd : IDecisionResolver
     private const uint ArmysPaeon = BRDSkill.ArmysPaeon;
     private const uint MagesBallad = BRDSkill.MagesBallad;
 
-    private static readonly uint Fist120SBuffId = BardBattleData.Instance.First120SBuffId;
-
     public CheckResult Check()
     {
         var actionId = BardHelper.Adjust(HeartBreak);
@@ -57,8 +55,8 @@ public class BardHeartBreakOffGcd : IDecisionResolver
 
         var repertoire = JobGaugeHelper.BRD.GetRepertoire;
         // 不和两层诗心以上的完美音调冲突，抢团辅最后一个能力技能
-        if (!BardHelper.HasSelfStatusWithTimeLeft(Fist120SBuffId, 1200) &&
-            BardHelper.HasSelfStatus(Fist120SBuffId) &&
+        if (!BardHelper.HasSelfStatusWithTimeLeft(BardBattleData.Instance.First120SBuffId, 1200) &&
+            BardHelper.HasSelfStatus(BardBattleData.Instance.First120SBuffId) &&
             repertoire >= 2)
             return new CheckResult(false, "让位团辅尾端完美音调");
 

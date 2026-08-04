@@ -1,5 +1,6 @@
+using PromeRotation;
 using PromeRotation.Data;
-using PromeRotation.Managers.CombatEventManager;
+using PromeRotation.LogSystem;
 using PromeRotation.Rotation;
 using WotouTC.Bard.Data;
 
@@ -13,12 +14,14 @@ public class BardRoationEventHandler : IRotationEventHandler
     {
         if (_eventsAttached) return;
 
-        CombatEventManager.OnActionEffect += BardCombatEventRecorder.OnActionEffect;
+        Plugin.Instance.LogSystem.Events.Subscribe<LogSystemActionEffectEvent>(
+            BardCombatEventRecorder.OnLogSystemActionEffect);
         _eventsAttached = true;
     }
 
     public void OnUpdate()
     {
+        
     }
 
     public void OnOutOfBattleUpdate()
@@ -53,4 +56,3 @@ public class BardRoationEventHandler : IRotationEventHandler
     {
     }
 }
-

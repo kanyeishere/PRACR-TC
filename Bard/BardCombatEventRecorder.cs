@@ -1,5 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
-using PromeRotation.Managers.CombatEventManager.Events;
+using PromeRotation.LogSystem;
 using WotouTC.Bard.Data;
 
 namespace WotouTC.Bard;
@@ -11,16 +11,23 @@ public static class BardCombatEventRecorder
         BardBattleData.Instance.ResetForBattle();
     }
 
-    public static void OnActionEffect(ActionEffectEvent ev)
+    public static void OnLogSystemActionEffect(LogSystemActionEffectEvent ev)
     {
-        var me = Core.Core.Me;
-        if (me == null || ev.SourceId != me.EntityId)
+        var playerEntityId = (ulong)Updaters.PlayerCacheUpdater.Snapshot.EntityId;
+        if (playerEntityId == 0)
+            playerEntityId = Core.Core.Me?.EntityId ?? 0;
+
+        if (!BardBattleData.Instance.ObserveActionEffect(
+                ev.ActionId,
+                ev.SourceId,
+                ev.GlobalSequence,
+                playerEntityId == 0 ? null : playerEntityId))
             return;
 
-        BardBattleData.Instance.RecordAction(ev.ActionId);
+        BardBattleData.Instance.RecordAction(ev.ActionId, ev.GlobalSequence);
         BardBattleData.Instance.RecordGcdAction(ev.ActionId);
-        BardBattleData.Instance.Record120SBuffAction(ev.ActionId);
-        ResetIronJawsBurstUsage(ev.ActionId);
+        BardBattleData.Instance.Record120SBuffAction(ev.ActionId, ev.GlobalSequence);
+        ResetIronJawsBurstUsage(ev.ActionId, ev.GlobalSequence);
         RecordSong(ev.ActionId);
         RecordIronJawsBurstUsage(ev.ActionId);
         RecordApexUsage(ev.ActionId);
@@ -32,20 +39,23 @@ public static class BardCombatEventRecorder
         if (song == Song.None)
             return;
 
-        BardBattleData.Instance.LastSong = song;
-        BardBattleData.Instance.LastSongTime = Environment.TickCount64;
+        BardBattleData.Instance.RecordSong(song);
     }
 
     private static void RecordIronJawsBurstUsage(uint actionId)
     {
-        if (actionId == BRDSkill.IronJaws && BardHelper.HasAllPartyBuff())
-            BardBattleData.Instance.HasUseIronJawsInCurrentBursting = true;
+        if (actionId != BRDSkill.IronJaws)
+            return;
+
+        // 猛者动作窗口是主判定；全团辅状态用于兼容插件中途加载或漏掉猛者事件。
+        BardBattleData.Instance.RecordIronJawsBurstUsage(
+            BardBattleData.Instance.IsWithinIronJawsBurstWindow() || BardHelper.HasAllPartyBuff());
     }
 
-    private static void ResetIronJawsBurstUsage(uint actionId)
+    private static void ResetIronJawsBurstUsage(uint actionId, uint globalSequence)
     {
         if (actionId == BRDSkill.RagingStrikes)
-            BardBattleData.Instance.HasUseIronJawsInCurrentBursting = false;
+            BardBattleData.Instance.ResetIronJawsBurstUsage(globalSequence);
     }
 
     private static void RecordApexUsage(uint actionId)
@@ -54,4 +64,3 @@ public static class BardCombatEventRecorder
             BardBattleData.Instance.HasUseApexArrowInCurrentNonBurstingPeriod = true;
     }
 }
-
