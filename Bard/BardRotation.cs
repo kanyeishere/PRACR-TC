@@ -91,7 +91,8 @@ public class BardRotation : IRotation
         {"100级 1G团辅起手", typeof(Bard1GOpener100)},
         {"70-80级 3G团辅起手", typeof(Bard3GOpener7080)},
         {"70级 5G团辅起手", typeof(Bard5GOpener70)},
-        {"100级 FR起手", typeof(BardFROpener100)}
+        {"100级 FR起手", typeof(BardFROpener100)},
+        {"自定义起手", typeof(BardCustomOpener)}
     };
 
     public PAction? NextAlways() => null;
@@ -198,7 +199,7 @@ public class BardRotation : IRotation
         return false;
     }
 
-    // 设置页的起手 index 与 Openers 字典顺序不一致（5=自定义起手在字典中无对应，FR 为 6），
+    // 设置页的起手 index 与 Openers 字典顺序不一致（5=自定义起手，6=FR），
     // 因此这里保留显式映射，而不是按字典下标取。
     private static IOpener CreateOpenerBySettings(int openerIndex)
     {
@@ -210,6 +211,7 @@ public class BardRotation : IRotation
             3 => new Bard3GOpener7080(),
             4 => new Bard5GOpener70(),
             6 => new BardFROpener100(),
+            5 => new BardCustomOpener(),
             _ => new Bard3GOpener100()
         };
     }
@@ -248,4 +250,3 @@ public class BardRotation : IRotation
     {
     }
 }
-
