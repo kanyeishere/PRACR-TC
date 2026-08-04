@@ -84,7 +84,6 @@ public class BardHelper
         var seconds = milliseconds / 1000f;
         return me.StatusList.Any(status =>
             status.StatusId == statusId &&
-            status.SourceId == me.EntityId &&
             status.RemainingTime > seconds);
     }
 
