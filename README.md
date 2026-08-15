@@ -1,6 +1,6 @@
 # Wotou-TC
 
-Wotou-TC 是基于 PromeRotation 框架的 FFXIV **吟游诗人（BRD）** 自动循环（ACR），面向 **繁中服（台服）Dalamud API13** 环境。
+Wotou-TC 是基于 PromeRotation 框架的 FFXIV **吟游诗人（BRD）和舞者（DNC）** 自动循环（ACR），面向 **繁中服（台服）Dalamud API13** 环境。
 
 ## 目标环境
 
@@ -22,6 +22,7 @@ dotnet build WotouTC.csproj
 | 目录/文件 | 说明 |
 |---|---|
 | `Bard/` | 吟游诗人 ACR 逻辑（技能、Buff、开场、战斗数据） |
+| `Dancer/` | 舞者 ACR 逻辑（舞步、资源、开场、时间轴节点） |
 | `docs/` | 开发文档 |
 | `.github/workflows/release.yml` | GitHub Actions 发布工作流 |
 | `WotouTC.csproj` | 项目文件，引用 PromeRotation.SDK.TC |

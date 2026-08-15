@@ -18,6 +18,7 @@ env:
   ACR_AUTHOR: Wotou-TC
   ACR_DESCRIPTION: 一个简单的只支持高难的ACR（台服API13版）
   ACR_JOB: BRD
+  ACR_JOB_DANCER: DNC
   ACR_CONTENT_SCOPE: Unspecified
   ACR_API_VERSION: "13"
 
@@ -64,25 +65,31 @@ jobs:
       - name: Sync RotationMetadata version
         shell: pwsh
         run: |
-          $path = "Bard/BardRotation.cs"
           $version = "${{ steps.version.outputs.version }}"
-          $text = Get-Content -Path $path -Raw
-          $pattern = '(\[RotationMetadata\(\(uint\)Job\.BRD,\s*"[^"]+",\s*"[^"]+",\s*")[^"]+("\)\])'
+          $paths = @(
+            "Bard/BardRotation.cs",
+            "Dancer/Prome/DancerRotation.cs"
+          )
+          $pattern = '(\[RotationMetadata\(\(uint\)Job\.[A-Z]+,\s*"[^"]+",\s*"[^"]+",\s*")[^"]+("\)\])'
           $regex = [regex]::new($pattern)
-          $updated = $regex.Replace(
-            $text,
-            [System.Text.RegularExpressions.MatchEvaluator]{
-              param($match)
-              $match.Groups[1].Value + $version + $match.Groups[2].Value
-            },
-            1)
 
-          if ($updated -eq $text) {
-            throw "Could not find RotationMetadata version in $path."
+          foreach ($path in $paths) {
+            $text = Get-Content -Path $path -Raw
+            if (-not $regex.IsMatch($text)) {
+              throw "Could not find RotationMetadata version in $path."
+            }
+
+            $updated = $regex.Replace(
+              $text,
+              [System.Text.RegularExpressions.MatchEvaluator]{
+                param($match)
+                $match.Groups[1].Value + $version + $match.Groups[2].Value
+              },
+              1)
+
+            Set-Content -Path $path -Value $updated -Encoding UTF8
+            Select-String -Path $path -Pattern "RotationMetadata"
           }
-
-          Set-Content -Path $path -Value $updated -Encoding UTF8
-          Select-String -Path $path -Pattern "RotationMetadata"
 
       - name: Build
         shell: pwsh
@@ -119,6 +126,10 @@ jobs:
             supportedJobs = @(
               [ordered]@{
                 job = "${{ env.ACR_JOB }}"
+                contentScope = "${{ env.ACR_CONTENT_SCOPE }}"
+              },
+              [ordered]@{
+                job = "${{ env.ACR_JOB_DANCER }}"
                 contentScope = "${{ env.ACR_CONTENT_SCOPE }}"
               }
             )
