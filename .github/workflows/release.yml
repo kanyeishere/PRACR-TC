@@ -127,10 +127,6 @@ jobs:
               [ordered]@{
                 job = "${{ env.ACR_JOB }}"
                 contentScope = "${{ env.ACR_CONTENT_SCOPE }}"
-              },
-              [ordered]@{
-                job = "${{ env.ACR_JOB_DANCER }}"
-                contentScope = "${{ env.ACR_CONTENT_SCOPE }}"
               }
             )
             apiVersion = [int]"${{ env.ACR_API_VERSION }}"
