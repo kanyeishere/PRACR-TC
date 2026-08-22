@@ -16,7 +16,7 @@ permissions:
 
 env:
   ACR_AUTHOR: Wotou-TC
-  ACR_DESCRIPTION: 一个简单的只支持高难的ACR（台服API13版）
+  ACR_DESCRIPTION: 一个简单的只支持高难的ACR（台服API13版）， DNC暂时不可使用
   ACR_JOB: BRD
   ACR_JOB_DANCER: DNC
   ACR_CONTENT_SCOPE: Unspecified
@@ -126,6 +126,10 @@ jobs:
             supportedJobs = @(
               [ordered]@{
                 job = "${{ env.ACR_JOB }}"
+                contentScope = "${{ env.ACR_CONTENT_SCOPE }}"
+              },
+              [ordered]@{
+                job = "${{ env.ACR_JOB_DANCER }}"
                 contentScope = "${{ env.ACR_CONTENT_SCOPE }}"
               }
             )
