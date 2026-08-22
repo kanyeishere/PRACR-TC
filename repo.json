@@ -1,0 +1,20 @@
+{
+  "author": "Wotou-TC",
+  "version": "1.0.1.8",
+  "description": "一个简单的只支持高难的ACR（台服API13版）， DNC暂时不可使用",
+  "supportedJobs": [
+    {
+      "job": "BRD",
+      "contentScope": "Unspecified"
+    },
+    {
+      "job": "DNC",
+      "contentScope": "Unspecified"
+    }
+  ],
+  "apiVersion": 13,
+  "referencePromeVersion": "1.3.1.1",
+  "downloadUrl": "https://raw.githubusercontent.com/kanyeishere/PRACR-TC/release/latest.zip",
+  "sourceRepositoryUrl": "https://github.com/kanyeishere/PRACR-TC",
+  "sha256": "ce3b7f2d11a007deff9f67b08727a94e9379ce008331f5a9d75367a472795be8"
+}
